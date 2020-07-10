@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using OnlineStore.API.Customers.Db;
+using OnlineStore.API.Customers.Interfaces;
+using OnlineStore.API.Customers.Providers;
 
 namespace OnlineStore.API.Customers
 {
@@ -24,6 +23,9 @@ namespace OnlineStore.API.Customers
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ICustomersProvider, CustomersProvider>();
+            services.AddAutoMapper(typeof(Startup));
+            services.AddDbContext<CustomersDbContext>(options => options.UseInMemoryDatabase("Customers"));
             services.AddControllers();
         }
 
