@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using OnlineStore.API.Products.Db;
@@ -32,35 +33,35 @@ namespace OnlineStore.API.Products.Providers
                 _dbContext.Products.Add((new Db.Product()
                 {
                     Id =  1,
-                    Name = "Monitor",
+                    Name = "Bat",
                     Price = 100,
                     Inventory = 127
                 }));
                 _dbContext.Products.Add((new Db.Product()
                 {
                     Id = 2,
-                    Name = "Keyboard",
+                    Name = "Ball",
                     Price = 120,
                     Inventory = 200
                 }));
                 _dbContext.Products.Add((new Db.Product()
                 {
                     Id = 3,
-                    Name = "CPU",
+                    Name = "Mat",
                     Price = 300,
                     Inventory = 400
                 }));
                 _dbContext.Products.Add((new Db.Product()
                 {
                     Id = 4,
-                    Name = "Mouse",
+                    Name = "Badminton",
                     Price = 20,
                     Inventory = 500
                 }));
                 _dbContext.Products.Add((new Db.Product()
                 {
                     Id = 5,
-                    Name = "Chipset",
+                    Name = "Racket",
                     Price = 175,
                     Inventory = 550
                 }));
@@ -68,9 +69,46 @@ namespace OnlineStore.API.Products.Providers
             }
         }
 
-        public Task<(bool IsSuccess, IEnumerable<Product> Products, string ErrorMessage)> GetProductsAsync()
+        public async Task<(bool IsSuccess, IEnumerable<Product> Products, string ErrorMessage)> GetProductsAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var products = await _dbContext.Products.ToListAsync();
+                if (products != null && products.Any())
+                {
+                    var result = _mapper.Map<IEnumerable<Db.Product>, IEnumerable<Models.Product>>(products);
+                    return (true, result, null);
+                }
+
+                return (false, null, "Not found");
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex.ToString());
+                return (false, null, ex.Message);
+            }
+          
+        }
+
+        public async Task<(bool IsSuccess, Product Product, string ErrorMessage)> GetProductAsync(int id)
+        {
+            try
+            {
+                var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+                
+                if (product != null )
+                {
+                    var result = _mapper.Map<Db.Product, Models.Product>(product);
+                    return (true, result, null);
+                }
+
+                return (false, null, "Not found");
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex.ToString());
+                return (false, null, ex.Message);
+            }
         }
     }
 }
