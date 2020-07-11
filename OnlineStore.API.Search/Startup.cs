@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OnlineStore.API.Search.Interfaces;
 using OnlineStore.API.Search.Services;
+using Polly;
 
 namespace OnlineStore.API.Search
 {
@@ -23,10 +24,15 @@ namespace OnlineStore.API.Search
         {
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IOrdersService, OrdersService>();
+            services.AddScoped<IProductsService, ProductsService>();
             services.AddHttpClient("OrdersService", config =>
             {
                 config.BaseAddress = new Uri(Configuration["Services:Orders"]);
             });
+            services.AddHttpClient("ProductsService", config =>
+            {
+                config.BaseAddress= new Uri(Configuration["Services:Products"]);
+            }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500)));
             services.AddControllers();
         }
 
