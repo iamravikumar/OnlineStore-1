@@ -10,11 +10,13 @@ namespace OnlineStore.API.Search.Services
     {
         private readonly IOrdersService _ordersService;
         private readonly IProductsService _productsService;
+        private readonly ICustomersService _customersService;
 
-        public SearchService(IOrdersService ordersService, IProductsService productsService)
+        public SearchService(IOrdersService ordersService, IProductsService productsService, ICustomersService customersService)
         {
             _ordersService = ordersService;
             _productsService = productsService;
+            _customersService = customersService;
         }
         public async Task<(bool IsSuccess, dynamic SearchResults)> SearchAsync(int CustomerId)
         {
@@ -22,6 +24,7 @@ namespace OnlineStore.API.Search.Services
             //return (true, new {Message = "Hello"});
             var ordersResult = await _ordersService.GetOrdersAsync(CustomerId);
             var productResult = await _productsService.GetProductsAsync();
+            var customerResult = await _customersService.GetCustomerAsync(CustomerId);
             if (ordersResult.IsSuccess)
             {
                 foreach (var order in ordersResult.Orders)
@@ -34,6 +37,7 @@ namespace OnlineStore.API.Search.Services
                 }
                 var result = new
                 {
+                    Customer = customerResult.IsSuccess? customerResult.Customer : new {Name="Customer Microservice is down at the moment"},
                     Orders = ordersResult.Orders
                 };
                 return (true, result);
