@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Restore Customers
-      run: dotnet restore OnlineStore.sln
+      run: dotnet restore *.csproj
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
