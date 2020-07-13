@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  onlinestore.api.customers:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "7002:80"
+
+  onlinestore.api.orders:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "7003:80"
+
+
+  onlinestore.api.products:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "7001:80"
+
+
+  onlinestore.api.search:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Services__Products=http://onlinestore.api.products
+      - Services__Customers=http://onlinestore.api.customers
+      - Services__Orders=http://onlinestore.api.orders
+    ports:
+      - "7004:80"
+
