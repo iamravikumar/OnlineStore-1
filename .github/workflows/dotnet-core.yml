@@ -18,7 +18,13 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Restore Customers
-      run: dotnet restore *.csproj
+      run: dotnet restore OnlineStore.API.Customers
+    - name: Restore Orders
+      run: dotnet restore OnlineStore.API.Orders
+    - name: Restore Products
+      run: dotnet restore OnlineStore.API.Products
+    - name: Restore Search
+      run: dotnet restore OnlineStore.API.Search
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
