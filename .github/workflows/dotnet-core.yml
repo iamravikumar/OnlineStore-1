@@ -17,8 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Install dependencies
-      run: dotnet restore
+    - name: Restore Customers
+      run: dotnet restore OnlineStore.sln
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
