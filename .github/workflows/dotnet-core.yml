@@ -26,6 +26,6 @@ jobs:
     - name: Restore Search
       run: dotnet restore OnlineStore.API.Search
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build OnlineStore.sln --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
