@@ -18,11 +18,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore OnlineStore.sln
       working-directory: ./
-   # - name: Build
-    #  run: dotnet build --configuration Release --no-restore
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
-    - name: Name with MSBuild
-      run: msbuild OnlineStore.sln
+    - name: Build
+      run: dotnet build OnlineStore.sln --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
